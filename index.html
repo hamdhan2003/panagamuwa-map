@@ -51,6 +51,7 @@
         
         // Prevent panning far away from the village
         var bounds = L.polygon(villageBoundary).getBounds();
+        map.fitBounds(bounds); // This line makes it perfectly fit the screen!
         map.setMaxBounds(bounds.pad(0.5));
     </script>
 </body>
