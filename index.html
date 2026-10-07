@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Village Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { width: 100vw; height: 100vh; background: #333; } /* Dark background for outside area */
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([7.378348358476418, 80.62927901744844], 16);
+
+        // High-resolution Satellite Imagery with Labels
+        L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '&copy; Google Maps'
+        }).addTo(map);
+
+        // The exact boundary of the village
+        var villageBoundary = [[7.37898,80.631602],[7.379457,80.631205],[7.379786,80.630572],[7.380201,80.630143],[7.380541,80.630014],[7.38069,80.629692],[7.380435,80.629467],[7.380212,80.629156],[7.378989,80.627117],[7.378276,80.626956],[7.377543,80.627106],[7.377043,80.627139],[7.376789,80.627172],[7.376438,80.627219],[7.376076,80.627396],[7.376057,80.628158],[7.376246,80.628625],[7.376006,80.630384],[7.376804,80.631323],[7.377607,80.631216],[7.378101,80.631157],[7.37898,80.631602]];
+
+        // The "World" boundary to mask everything outside
+        var worldBoundary = [
+            [-90, -180],
+            [90, -180],
+            [90, 180],
+            [-90, 180],
+            [-90, -180]
+        ];
+
+        // Create a polygon with a hole (the village)
+        var mask = L.polygon([worldBoundary, villageBoundary], {
+            color: 'none', // No border for the mask
+            fillColor: 'rgba(0, 0, 0, 0.8)', // Dark overlay color
+            fillOpacity: 1
+        }).addTo(map);
+
+        // Optional: add a border around the village
+        L.polygon(villageBoundary, {
+            color: '#ff0000',
+            weight: 2,
+            fill: false
+        }).addTo(map);
+        
+        // Prevent panning far away from the village
+        var bounds = L.polygon(villageBoundary).getBounds();
+        map.setMaxBounds(bounds.pad(0.5));
+    </script>
+</body>
+</html>
